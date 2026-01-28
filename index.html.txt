@@ -1,0 +1,1392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Logic Fundamentals Exam</title>
+    <meta name="description" content="Interactive assessment for digital logic concepts - binary, octal, hexadecimal systems, Boolean algebra, and logic gates">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-gradient-start: #0c2461;
+            --primary-gradient-end: #1e3799;
+            --accent-purple: #6c5ce7;
+            --accent-teal: #00cec9;
+            --accent-green: #00b894;
+            --correct-color: #27ae60;
+            --incorrect-color: #e74c3c;
+            --card-bg: rgba(25, 40, 85, 0.94);
+            --container-bg: rgba(15, 25, 55, 0.97);
+            --text-primary: #f8f9fa;
+            --text-secondary: #a8e6cf;
+            --border-color: rgba(100, 180, 255, 0.35);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background: linear-gradient(135deg, var(--primary-gradient-start), var(--primary-gradient-end), #40407a, var(--primary-gradient-start));
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background-attachment: fixed;
+        }
+
+        .exam-container {
+            max-width: 950px;
+            width: 100%;
+            background: var(--container-bg);
+            border-radius: 32px;
+            padding: 45px;
+            box-shadow: 0 28px 70px rgba(0, 10, 30, 0.85);
+            border: 2px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.4s ease;
+        }
+
+        .exam-container::before {
+            content: '';
+            position: absolute;
+            top: -60%;
+            left: -30%;
+            width: 180%;
+            height: 220%;
+            background: radial-gradient(circle, rgba(40, 80, 180, 0.08) 0%, transparent 65%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .header-section {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+            padding-bottom: 30px;
+        }
+
+        .header-section::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 140px;
+            height: 4px;
+            background: linear-gradient(to right, transparent, var(--accent-purple), var(--accent-teal), transparent);
+            border-radius: 2px;
+        }
+
+        .exam-title {
+            font-size: 3.8rem;
+            margin-bottom: 18px;
+            background: linear-gradient(to right, var(--accent-purple), var(--accent-teal), var(--accent-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 5px 20px rgba(0, 150, 200, 0.35);
+            letter-spacing: -0.5px;
+            font-weight: 800;
+            line-height: 1.1;
+        }
+
+        .exam-subtitle {
+            font-size: 1.45rem;
+            opacity: 0.92;
+            color: var(--text-secondary);
+            margin-top: 15px;
+            font-weight: 300;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .progress-section {
+            background: rgba(30, 50, 100, 0.82);
+            padding: 24px;
+            border-radius: 20px;
+            margin: 35px 0;
+            border: 1.5px solid var(--border-color);
+            box-shadow: 0 6px 18px rgba(0, 20, 45, 0.4);
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .question-counter {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--accent-purple);
+            background: rgba(108, 92, 231, 0.15);
+            padding: 6px 18px;
+            border-radius: 14px;
+            border: 1px solid rgba(108, 92, 231, 0.3);
+        }
+
+        .score-display {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--accent-teal);
+            background: rgba(0, 206, 201, 0.15);
+            padding: 6px 18px;
+            border-radius: 14px;
+            border: 1px solid rgba(0, 206, 201, 0.3);
+        }
+
+        .progress-bar-container {
+            height: 16px;
+            background: rgba(100, 150, 255, 0.18);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(to right, var(--accent-purple), var(--accent-teal));
+            border-radius: 8px;
+            width: 0%;
+            transition: width 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+            box-shadow: 0 0 12px rgba(108, 92, 231, 0.6);
+        }
+
+        .question-card {
+            background: var(--card-bg);
+            border-radius: 26px;
+            padding: 48px;
+            margin: 35px 0;
+            border: 2.5px solid var(--border-color);
+            box-shadow: 0 14px 40px rgba(0, 25, 60, 0.6);
+            animation: cardEntrance 0.7s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @keyframes cardEntrance {
+            0% {
+                opacity: 0;
+                transform: translateY(30px) scale(0.97);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .question-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 6px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--accent-purple), var(--accent-teal));
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .question-number-badge {
+            background: linear-gradient(135deg, var(--accent-purple), #5547e8);
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 2.1rem;
+            box-shadow: 0 8px 22px rgba(108, 92, 231, 0.55);
+            color: white;
+            flex-shrink: 0;
+            border: 3px solid rgba(255, 255, 255, 0.25);
+        }
+
+        .question-type-badge {
+            background: rgba(108, 92, 231, 0.22);
+            padding: 10px 26px;
+            border-radius: 24px;
+            font-size: 1.25rem;
+            color: var(--accent-purple);
+            font-weight: 700;
+            border: 1.5px solid rgba(108, 92, 231, 0.45);
+            align-self: center;
+            letter-spacing: 0.5px;
+        }
+
+        .question-text {
+            font-size: 1.75rem;
+            margin-bottom: 38px;
+            font-weight: 600;
+            color: #f0f8ff;
+            line-height: 1.55;
+            min-height: 110px;
+            display: flex;
+            align-items: center;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 22px;
+            margin-bottom: 32px;
+        }
+
+        .option {
+            padding: 22px 32px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 2.5px solid rgba(150, 200, 255, 0.38);
+            font-size: 1.35rem;
+            background: rgba(45, 68, 125, 0.65);
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            position: relative;
+            overflow: hidden;
+            font-weight: 500;
+        }
+
+        .option:hover {
+            background: rgba(65, 95, 160, 0.82);
+            transform: translateX(12px);
+            border-color: rgba(120, 185, 255, 0.75);
+            z-index: 2;
+        }
+
+        .option::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 6px;
+            background: linear-gradient(to bottom, var(--accent-purple), var(--accent-teal));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .option:hover::before {
+            opacity: 1;
+        }
+
+        .option.selected {
+            border-color: rgba(255, 255, 255, 0.92);
+            background: rgba(58, 85, 148, 0.88);
+            transform: translateX(8px);
+        }
+
+        .option.correct {
+            background: rgba(46, 204, 113, 0.28) !important;
+            border-color: rgba(46, 204, 113, 0.8) !important;
+            color: var(--correct-color) !important;
+            font-weight: 700;
+            transform: translateX(0) !important;
+            box-shadow: 0 0 25px rgba(46, 204, 113, 0.35);
+        }
+
+        .option.correct::before {
+            content: "✓";
+            position: absolute;
+            left: 22px;
+            font-weight: bold;
+            font-size: 1.9rem;
+            color: var(--correct-color);
+            margin-right: 15px;
+            animation: bounce 0.6s;
+        }
+
+        .option.incorrect {
+            background: rgba(231, 76, 60, 0.26) !important;
+            border-color: rgba(231, 76, 60, 0.75) !important;
+            color: var(--incorrect-color) !important;
+            font-weight: 700;
+            transform: translateX(0) !important;
+            box-shadow: 0 0 25px rgba(231, 76, 60, 0.3);
+        }
+
+        .option.incorrect::before {
+            content: "✗";
+            position: absolute;
+            left: 22px;
+            font-weight: bold;
+            font-size: 1.9rem;
+            color: var(--incorrect-color);
+            margin-right: 15px;
+            animation: shake 0.5s;
+            opacity: 0.92;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-12px);}
+            60% {transform: translateY(-8px);}
+        }
+
+        @keyframes shake {
+            0%, 100% {transform: translateX(0);}
+            20%, 60% {transform: translateX(-8px);}
+            40%, 80% {transform: translateX(8px);}
+        }
+
+        .tf-container {
+            display: flex;
+            gap: 55px;
+            justify-content: center;
+            margin: 40px 0;
+            flex-wrap: wrap;
+        }
+
+        .tf-option {
+            padding: 26px 65px;
+            border-radius: 24px;
+            cursor: pointer;
+            transition: all 0.38s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-weight: 800;
+            font-size: 1.65rem;
+            min-width: 220px;
+            text-align: center;
+            border: 3.5px solid rgba(200, 200, 255, 0.48);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+        }
+
+        .tf-option.true {
+            background: rgba(85, 130, 220, 0.58);
+            color: #e6f3ff;
+            border-color: rgba(108, 92, 231, 0.65);
+        }
+
+        .tf-option.false {
+            background: rgba(210, 90, 90, 0.58);
+            color: #ffe9e9;
+            border-color: rgba(231, 76, 60, 0.65);
+        }
+
+        .tf-option:hover {
+            transform: translateY(-7px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+            z-index: 3;
+        }
+
+        .tf-option.selected {
+            border-color: rgba(255, 255, 255, 0.95);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+        }
+
+        .tf-option.correct {
+            box-shadow: 0 0 35px rgba(46, 204, 113, 0.5) !important;
+        }
+
+        .tf-option.incorrect {
+            box-shadow: 0 0 35px rgba(231, 76, 60, 0.45) !important;
+        }
+
+        .topic-indicator {
+            display: inline-block;
+            background: rgba(108, 92, 231, 0.22);
+            padding: 10px 28px;
+            border-radius: 22px;
+            font-size: 1.15rem;
+            margin-top: 22px;
+            color: #c3b7ff;
+            border: 1.5px solid rgba(108, 92, 231, 0.4);
+            letter-spacing: 0.3px;
+            font-weight: 500;
+            align-self: flex-start;
+        }
+
+        .feedback-area {
+            background: rgba(35, 58, 105, 0.85);
+            padding: 28px;
+            border-radius: 22px;
+            margin: 35px 0;
+            display: none;
+            border-left: 5px solid var(--accent-teal);
+            box-shadow: 0 6px 20px rgba(0, 30, 60, 0.45);
+        }
+
+        .feedback-text {
+            font-size: 1.55rem;
+            text-align: center;
+            padding: 12px 20px;
+            border-radius: 16px;
+            font-weight: 700;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .feedback-correct {
+            background: rgba(46, 204, 113, 0.22);
+            color: var(--correct-color);
+            border: 2px solid rgba(46, 204, 113, 0.55);
+        }
+
+        .feedback-incorrect {
+            background: rgba(231, 76, 60, 0.22);
+            color: var(--incorrect-color);
+            border: 2px solid rgba(231, 76, 60, 0.55);
+        }
+
+        .navigation-area {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 35px;
+            gap: 25px;
+            flex-wrap: wrap;
+        }
+
+        .nav-button {
+            padding: 20px 42px;
+            font-size: 1.45rem;
+            font-weight: 700;
+            border-radius: 60px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: none;
+            flex: 1;
+            min-width: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
+            letter-spacing: 0.5px;
+        }
+
+        .nav-button.prev {
+            background: linear-gradient(135deg, #55efc4, #00cec9);
+            color: #0a2933;
+        }
+
+        .nav-button.next {
+            background: linear-gradient(135deg, var(--accent-purple), #8e81ff);
+            color: white;
+        }
+
+        .nav-button.finish {
+            background: linear-gradient(135deg, #ff9e6d, #ff6b6b);
+            color: white;
+        }
+
+        .nav-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+        }
+
+        .nav-button:active {
+            transform: translateY(2px);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+        }
+
+        .nav-button:disabled {
+            opacity: 0.62;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-button i {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+
+        .results-screen {
+            text-align: center;
+            padding: 60px 35px;
+            display: none;
+        }
+
+        .results-title {
+            font-size: 3.2rem;
+            margin-bottom: 30px;
+            color: var(--accent-purple);
+            font-weight: 800;
+            background: linear-gradient(to right, var(--accent-purple), var(--accent-teal));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 4px 15px rgba(108, 92, 231, 0.3);
+        }
+
+        .score-display-large {
+            width: 320px;
+            height: 320px;
+            margin: 35px auto;
+            border-radius: 50%;
+            background: conic-gradient(var(--accent-teal) 0%, var(--accent-purple) 0%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.55);
+            border: 12px solid rgba(15, 25, 55, 0.96);
+        }
+
+        .score-display-large::before {
+            content: '';
+            position: absolute;
+            width: 270px;
+            height: 270px;
+            background: var(--container-bg);
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        .score-percentage {
+            position: relative;
+            font-size: 6.5rem;
+            font-weight: 800;
+            background: linear-gradient(to right, var(--accent-purple), var(--accent-teal));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            z-index: 2;
+            line-height: 1;
+            text-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .score-summary {
+            font-size: 2.1rem;
+            margin: 30px 0;
+            color: #a29bfe;
+            font-weight: 700;
+            background: rgba(108, 92, 231, 0.18);
+            padding: 18px 45px;
+            border-radius: 24px;
+            display: inline-block;
+            border: 2px solid rgba(108, 92, 231, 0.4);
+        }
+
+        .performance-message {
+            font-size: 1.9rem;
+            margin: 28px 0;
+            padding: 28px;
+            border-radius: 24px;
+            background: rgba(108, 92, 231, 0.22);
+            border: 2.5px solid rgba(108, 92, 231, 0.45);
+            font-weight: 600;
+            line-height: 1.5;
+            min-height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .restart-button {
+            background: linear-gradient(135deg, var(--accent-green), #55efc4);
+            color: #0a2933;
+            padding: 24px 65px;
+            font-size: 1.8rem;
+            font-weight: 800;
+            border-radius: 65px;
+            cursor: pointer;
+            transition: all 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: none;
+            margin-top: 35px;
+            box-shadow: 0 10px 35px rgba(0, 184, 148, 0.55);
+            letter-spacing: 1px;
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .restart-button:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 15px 45px rgba(0, 184, 148, 0.7);
+        }
+
+        .restart-button:active {
+            transform: translateY(2px);
+            box-shadow: 0 8px 25px rgba(0, 184, 148, 0.6);
+        }
+
+        .developer-credit {
+            text-align: center;
+            margin-top: 45px;
+            padding-top: 28px;
+            border-top: 1.5px solid rgba(130, 180, 255, 0.35);
+            font-size: 1.35rem;
+            color: rgba(180, 190, 255, 0.92);
+            font-weight: 600;
+            letter-spacing: 0.8px;
+            position: relative;
+            line-height: 1.6;
+        }
+
+        .developer-credit::before {
+            content: "";
+            position: absolute;
+            top: -14px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(to right, transparent, var(--accent-purple), var(--accent-teal), transparent);
+            border-radius: 3px;
+        }
+
+        .developer-name {
+            background: linear-gradient(to right, var(--accent-purple), #a29bfe, var(--accent-teal));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+            letter-spacing: 2px;
+            display: block;
+            margin-top: 10px;
+            font-size: 2.1rem;
+            text-shadow: 0 3px 10px rgba(108, 92, 231, 0.4);
+        }
+
+        .copyright {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(100, 150, 255, 0.25);
+            color: rgba(160, 180, 255, 0.75);
+            font-size: 1.05rem;
+            letter-spacing: 0.5px;
+            font-weight: 500;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 960px) {
+            .exam-container {
+                padding: 35px;
+                border-radius: 28px;
+            }
+            
+            .exam-title {
+                font-size: 3.1rem;
+            }
+            
+            .question-card {
+                padding: 38px;
+            }
+            
+            .question-text {
+                font-size: 1.55rem;
+                min-height: 90px;
+            }
+            
+            .option {
+                font-size: 1.25rem;
+                padding: 18px 26px;
+            }
+            
+            .tf-option {
+                padding: 22px 45px;
+                font-size: 1.45rem;
+                min-width: 180px;
+            }
+            
+            .nav-button {
+                padding: 18px 35px;
+                font-size: 1.3rem;
+            }
+            
+            .score-display-large {
+                width: 280px;
+                height: 280px;
+            }
+            
+            .score-percentage {
+                font-size: 5.4rem;
+            }
+            
+            .score-summary {
+                font-size: 1.85rem;
+                padding: 16px 40px;
+            }
+            
+            .performance-message {
+                font-size: 1.65rem;
+                padding: 24px;
+            }
+            
+            .restart-button {
+                padding: 22px 55px;
+                font-size: 1.65rem;
+            }
+            
+            .developer-name {
+                font-size: 1.85rem;
+                letter-spacing: 1.5px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .exam-container {
+                padding: 28px;
+                margin: 12px;
+                border-radius: 24px;
+            }
+            
+            .exam-title {
+                font-size: 2.7rem;
+            }
+            
+            .exam-subtitle {
+                font-size: 1.25rem;
+            }
+            
+            .question-card {
+                padding: 32px 25px;
+            }
+            
+            .question-header {
+                flex-direction: column;
+                gap: 25px;
+            }
+            
+            .question-number-badge {
+                width: 64px;
+                height: 64px;
+                font-size: 1.9rem;
+            }
+            
+            .question-text {
+                font-size: 1.45rem;
+                min-height: 80px;
+            }
+            
+            .options-grid {
+                gap: 18px;
+            }
+            
+            .option {
+                font-size: 1.18rem;
+                padding: 16px 22px;
+            }
+            
+            .tf-container {
+                gap: 25px;
+            }
+            
+            .tf-option {
+                padding: 20px 35px;
+                font-size: 1.4rem;
+                min-width: 160px;
+            }
+            
+            .topic-indicator {
+                font-size: 1.05rem;
+                padding: 8px 22px;
+            }
+            
+            .nav-button {
+                padding: 17px 30px;
+                font-size: 1.25rem;
+                min-width: 150px;
+            }
+            
+            .nav-button i {
+                font-size: 1.6rem;
+            }
+            
+            .score-display-large {
+                width: 250px;
+                height: 250px;
+            }
+            
+            .score-percentage {
+                font-size: 4.8rem;
+            }
+            
+            .score-summary {
+                font-size: 1.7rem;
+            }
+            
+            .performance-message {
+                font-size: 1.55rem;
+            }
+            
+            .restart-button {
+                padding: 20px 48px;
+                font-size: 1.55rem;
+            }
+            
+            .developer-credit {
+                font-size: 1.2rem;
+                margin-top: 35px;
+                padding-top: 24px;
+            }
+            
+            .developer-name {
+                font-size: 1.7rem;
+            }
+            
+            .copyright {
+                font-size: 0.98rem;
+                padding-top: 18px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .exam-container {
+                padding: 22px 18px;
+                border-radius: 22px;
+            }
+            
+            .exam-title {
+                font-size: 2.35rem;
+            }
+            
+            .exam-subtitle {
+                font-size: 1.15rem;
+            }
+            
+            .progress-header {
+                flex-direction: column;
+                gap: 12px;
+            }
+            
+            .question-card {
+                padding: 28px 20px;
+            }
+            
+            .question-number-badge {
+                width: 58px;
+                height: 58px;
+                font-size: 1.75rem;
+            }
+            
+            .question-type-badge {
+                font-size: 1.15rem;
+                padding: 8px 22px;
+            }
+            
+            .question-text {
+                font-size: 1.35rem;
+                min-height: 75px;
+            }
+            
+            .option {
+                font-size: 1.12rem;
+                padding: 15px 20px;
+            }
+            
+            .tf-container {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .tf-option {
+                width: 100%;
+                padding: 22px;
+                font-size: 1.5rem;
+            }
+            
+            .feedback-text {
+                font-size: 1.4rem;
+            }
+            
+            .nav-button {
+                padding: 16px 25px;
+                font-size: 1.22rem;
+            }
+            
+            .score-display-large {
+                width: 230px;
+                height: 230px;
+            }
+            
+            .score-percentage {
+                font-size: 4.3rem;
+            }
+            
+            .score-summary {
+                font-size: 1.6rem;
+                padding: 14px 32px;
+            }
+            
+            .performance-message {
+                font-size: 1.45rem;
+                padding: 20px 15px;
+            }
+            
+            .restart-button {
+                width: 100%;
+                padding: 19px;
+                font-size: 1.5rem;
+                justify-content: center;
+            }
+            
+            .developer-name {
+                font-size: 1.55rem;
+                letter-spacing: 1.2px;
+            }
+            
+            .developer-credit {
+                font-size: 1.12rem;
+            }
+            
+            .copyright {
+                font-size: 0.95rem;
+                line-height: 1.5;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="exam-container">
+        <!-- Header Section -->
+        <header class="header-section">
+            <h1 class="exam-title">DIGITAL LOGIC EXAMINATION</h1>
+            <p class="exam-subtitle">Master the fundamentals of digital systems • 50 questions • No time limit</p>
+        </header>
+
+        <!-- Progress Section -->
+        <section class="progress-section">
+            <div class="progress-header">
+                <div class="question-counter">Question: <span id="current-question">1</span> / <span id="total-questions">50</span></div>
+                <div class="score-display">Score: <span id="current-score">0</span> / 50</div>
+            </div>
+            <div class="progress-bar-container">
+                <div class="progress-fill" id="progress-bar"></div>
+            </div>
+        </section>
+
+        <!-- Question Card -->
+        <main class="question-card" id="question-card">
+            <div class="question-header">
+                <div class="question-number-badge" id="question-number">1</div>
+                <div class="question-type-badge" id="question-type">Multiple Choice</div>
+            </div>
+            <div class="question-text" id="question-text">What is the binary equivalent of decimal number 27?</div>
+            <div class="options-grid" id="options-container">
+                <div class="option" data-value="A">A) 11001</div>
+                <div class="option" data-value="B">B) 10111</div>
+                <div class="option" data-value="C">C) 11011</div>
+                <div class="option" data-value="D">D) 11101</div>
+            </div>
+            <div class="tf-container" id="tf-container" style="display: none;">
+                <div class="tf-option true" data-value="true">TRUE</div>
+                <div class="tf-option false" data-value="false">FALSE</div>
+            </div>
+            <div class="topic-indicator" id="topic-indicator">Binary Conversion</div>
+        </main>
+
+        <!-- Feedback Area -->
+        <section class="feedback-area" id="feedback-area">
+            <div class="feedback-text" id="feedback-text"></div>
+        </section>
+
+        <!-- Navigation -->
+        <div class="navigation-area">
+            <button class="nav-button prev" id="prev-button" disabled>
+                <i>←</i> Previous
+            </button>
+            <button class="nav-button next" id="next-button">
+                Next Question →
+            </button>
+        </div>
+
+        <!-- Developer Credit -->
+        <div class="developer-credit">
+            Expertly crafted and programmed with precision by:
+            <span class="developer-name">ALI ADNAN</span>
+        </div>
+
+        <!-- Copyright -->
+        <div class="copyright">
+            © 2026 Digital Logic Assessment System • Educational Purpose Only
+        </div>
+
+        <!-- Results Screen (Hidden Initially) -->
+        <section class="results-screen" id="results-screen">
+            <h2 class="results-title">EXAMINATION COMPLETED</h2>
+            <div class="score-display-large" id="score-circle">
+                <div class="score-percentage" id="final-score">0%</div>
+            </div>
+            <div class="score-summary">
+                <span id="correct-count">0</span> Correct Answers out of 50
+            </div>
+            <div class="performance-message" id="performance-message"></div>
+            <button class="restart-button" id="restart-button">
+                <i>⟳</i> Restart Examination
+            </button>
+            
+            <!-- Developer Credit on Results -->
+            <div class="developer-credit" style="margin-top: 50px;">
+                Expertly crafted and programmed with precision by:
+                <span class="developer-name">ALI ADNAN</span>
+            </div>
+            
+            <div class="copyright" style="margin-top: 30px;">
+                © 2026 Digital Logic Assessment System • Educational Purpose Only
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Complete exam data - 50 questions (25 MCQ + 25 True/False)
+        const examData = [
+            // MCQ Questions 1-25
+            { type: 'mcq', question: 'What is the binary equivalent of decimal number 27?', options: ['A) 11001', 'B) 10111', 'C) 11011', 'D) 11101'], correct: 'C', topic: 'Binary Conversion' },
+            { type: 'mcq', question: 'How many bits are required to represent the octal number 642?', options: ['A) 8 bits', 'B) 9 bits', 'C) 10 bits', 'D) 12 bits'], correct: 'B', topic: 'Octal System' },
+            { type: 'mcq', question: 'What is the hexadecimal equivalent of binary number 11011011?', options: ['A) C7', 'B) D3', 'C) E5', 'D) DB'], correct: 'D', topic: 'Hexadecimal Conversion' },
+            { type: 'mcq', question: 'In Gray code, what is the representation of decimal 6?', options: ['A) 0110', 'B) 0111', 'C) 0101', 'D) 0100'], correct: 'C', topic: 'Gray Code' },
+            { type: 'mcq', question: 'What is the 2\'s complement of binary number 0110?', options: ['A) 0110', 'B) 1001', 'C) 1010', 'D) 1100'], correct: 'C', topic: '2\'s Complement' },
+            { type: 'mcq', question: 'Which logic gate produces output 1 only when all inputs are 0?', options: ['A) AND', 'B) OR', 'C) NAND', 'D) NOR'], correct: 'D', topic: 'Logic Gates' },
+            { type: 'mcq', question: 'According to De Morgan\'s theorem, what is equivalent to (X + Y)\'?', options: ['A) X\' · Y\'', 'B) X\' + Y\'', 'C) X · Y', 'D) X + Y'], correct: 'A', topic: 'De Morgan\'s Theorem' },
+            { type: 'mcq', question: 'How many symbols exist in the hexadecimal number system?', options: ['A) 8', 'B) 10', 'C) 16', 'D) 2'], correct: 'C', topic: 'Hexadecimal System' },
+            { type: 'mcq', question: 'Which Boolean law states that X · Y = Y · X?', options: ['A) Commutative Law', 'B) Associative Law', 'C) Distributive Law', 'D) Identity Law'], correct: 'A', topic: 'Boolean Algebra' },
+            { type: 'mcq', question: 'What is the result of binary addition: 1101 + 0111?', options: ['A) 10010', 'B) 10100', 'C) 11000', 'D) 11100'], correct: 'B', topic: 'Binary Addition' },
+            { type: 'mcq', question: 'What is the octal equivalent of binary number 101110?', options: ['A) 54', 'B) 55', 'C) 56', 'D) 57'], correct: 'C', topic: 'Binary to Octal' },
+            { type: 'mcq', question: 'The decimal equivalent of hexadecimal number 3F is:', options: ['A) 55', 'B) 59', 'C) 63', 'D) 67'], correct: 'C', topic: 'Hexadecimal to Decimal' },
+            { type: 'mcq', question: 'What is the 1\'s complement of binary number 10110?', options: ['A) 01001', 'B) 01010', 'C) 10101', 'D) 11001'], correct: 'A', topic: '1\'s Complement' },
+            { type: 'mcq', question: 'Which gate is known as a universal gate?', options: ['A) AND', 'B) OR', 'C) NAND', 'D) XOR'], correct: 'C', topic: 'Universal Gates' },
+            { type: 'mcq', question: 'The binary representation of decimal number 53 is:', options: ['A) 110100', 'B) 110110', 'C) 110101', 'D) 111001'], correct: 'C', topic: 'Decimal to Binary' },
+            { type: 'mcq', question: 'What is the result of binary subtraction: 1110 - 0101?', options: ['A) 0100', 'B) 1001', 'C) 1010', 'D) 1011'], correct: 'B', topic: 'Binary Subtraction' },
+            { type: 'mcq', question: 'According to Boolean algebra, X · X\' equals:', options: ['A) X', 'B) 0', 'C) 1', 'D) X\''], correct: 'B', topic: 'Boolean Algebra' },
+            { type: 'mcq', question: 'The hexadecimal equivalent of octal number 67 is:', options: ['A) 35', 'B) 36', 'C) 37', 'D) 38'], correct: 'C', topic: 'Octal to Hexadecimal' },
+            { type: 'mcq', question: 'Which logic gate outputs 1 when inputs are different?', options: ['A) AND', 'B) OR', 'C) NAND', 'D) XOR'], correct: 'D', topic: 'Logic Gates' },
+            { type: 'mcq', question: 'The decimal value of binary number 11011 is:', options: ['A) 25', 'B) 27', 'C) 29', 'D) 31'], correct: 'B', topic: 'Binary to Decimal' },
+            { type: 'mcq', question: 'What is the octal representation of decimal number 81?', options: ['A) 117', 'B) 121', 'C) 125', 'D) 131'], correct: 'B', topic: 'Decimal to Octal' },
+            { type: 'mcq', question: 'The result of binary multiplication: 110 × 101 is:', options: ['A) 11100', 'B) 11110', 'C) 11110', 'D) 100100'], correct: 'C', topic: 'Binary Multiplication' },
+            { type: 'mcq', question: 'Which of the following is NOT a standard logic gate?', options: ['A) AND', 'B) OR', 'C) NOT', 'D) ADD'], correct: 'D', topic: 'Logic Gates' },
+            { type: 'mcq', question: 'The binary equivalent of hexadecimal number E is:', options: ['A) 1101', 'B) 1110', 'C) 1011', 'D) 1110'], correct: 'D', topic: 'Hexadecimal to Binary' },
+            { type: 'mcq', question: 'According to De Morgan\'s theorem, (X · Y)\' is equivalent to:', options: ['A) X\' · Y\'', 'B) X\' + Y\'', 'C) X + Y', 'D) X · Y'], correct: 'B', topic: 'De Morgan\'s Theorem' },
+            
+            // True/False Questions 26-50
+            { type: 'tf', question: 'In binary system, the number 101 represents decimal value 5.', correct: 'true', topic: 'Binary System' },
+            { type: 'tf', question: 'The octal number system has a base of 10.', correct: 'false', topic: 'Octal System' },
+            { type: 'tf', question: 'In Gray code, successive values differ by only one bit.', correct: 'true', topic: 'Gray Code' },
+            { type: 'tf', question: 'The 1\'s complement of binary number 1101 is 0011.', correct: 'false', topic: '1\'s Complement' },
+            { type: 'tf', question: 'An XOR gate outputs 1 when both inputs are identical.', correct: 'false', topic: 'XOR Gate' },
+            { type: 'tf', question: 'According to Boolean algebra, X + X\' = 1.', correct: 'true', topic: 'Boolean Algebra' },
+            { type: 'tf', question: 'The hexadecimal digit \'F\' represents decimal value 16.', correct: 'false', topic: 'Hexadecimal System' },
+            { type: 'tf', question: 'A byte consists of 8 bits.', correct: 'true', topic: 'Digital Systems' },
+            { type: 'tf', question: 'NAND gates alone can be used to implement any Boolean function.', correct: 'true', topic: 'Universal Gates' },
+            { type: 'tf', question: 'In signed 2\'s complement representation, the MSB represents the sign bit.', correct: 'true', topic: '2\'s Complement' },
+            { type: 'tf', question: 'The binary number 10011 is equal to decimal 19.', correct: 'true', topic: 'Binary Conversion' },
+            { type: 'tf', question: 'An AND gate outputs 1 if at least one input is 1.', correct: 'false', topic: 'AND Gate' },
+            { type: 'tf', question: 'The octal equivalent of binary 110 is 6.', correct: 'true', topic: 'Binary to Octal' },
+            { type: 'tf', question: 'The 2\'s complement of 0 is 0.', correct: 'true', topic: '2\'s Complement' },
+            { type: 'tf', question: 'In hexadecimal system, the letter \'A\' represents decimal 11.', correct: 'false', topic: 'Hexadecimal System' },
+            { type: 'tf', question: 'A NOR gate is the complement of an OR gate.', correct: 'true', topic: 'NOR Gate' },
+            { type: 'tf', question: 'The result of binary addition 1 + 1 is 10.', correct: 'true', topic: 'Binary Addition' },
+            { type: 'tf', question: 'Gray code is used to minimize errors in digital systems.', correct: 'true', topic: 'Gray Code Applications' },
+            { type: 'tf', question: 'According to Boolean algebra, X + 0 = 0.', correct: 'false', topic: 'Boolean Algebra' },
+            { type: 'tf', question: 'The hexadecimal number 20 is equal to decimal 32.', correct: 'true', topic: 'Hexadecimal Conversion' },
+            { type: 'tf', question: 'An OR gate outputs 0 only when all inputs are 0.', correct: 'true', topic: 'OR Gate' },
+            { type: 'tf', question: 'The binary representation of decimal 16 is 10010.', correct: 'false', topic: 'Decimal to Binary' },
+            { type: 'tf', question: 'De Morgan\'s theorem is used to simplify Boolean expressions.', correct: 'true', topic: 'De Morgan\'s Theorem' },
+            { type: 'tf', question: 'The octal number 12 is equal to decimal 12.', correct: 'false', topic: 'Octal Conversion' },
+            { type: 'tf', question: 'A NOT gate has only one input.', correct: 'true', topic: 'NOT Gate' }
+        ];
+
+        // DOM Elements
+        const questionCard = document.getElementById('question-card');
+        const questionNumber = document.getElementById('question-number');
+        const questionType = document.getElementById('question-type');
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const tfContainer = document.getElementById('tf-container');
+        const topicIndicator = document.getElementById('topic-indicator');
+        const feedbackArea = document.getElementById('feedback-area');
+        const feedbackText = document.getElementById('feedback-text');
+        const prevButton = document.getElementById('prev-button');
+        const nextButton = document.getElementById('next-button');
+        const currentQuestionEl = document.getElementById('current-question');
+        const totalQuestionsEl = document.getElementById('total-questions');
+        const currentScoreEl = document.getElementById('current-score');
+        const progressBar = document.getElementById('progress-bar');
+        const resultsScreen = document.getElementById('results-screen');
+        const finalScoreEl = document.getElementById('final-score');
+        const correctCountEl = document.getElementById('correct-count');
+        const scoreCircle = document.getElementById('score-circle');
+        const performanceMessage = document.getElementById('performance-message');
+        const restartButton = document.getElementById('restart-button');
+
+        // Exam State
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let userAnswers = new Array(examData.length).fill(null);
+        const totalQuestions = examData.length;
+
+        // Initialize exam
+        totalQuestionsEl.textContent = totalQuestions;
+        loadQuestion(currentQuestionIndex);
+
+        // Load question function
+        function loadQuestion(index) {
+            const question = examData[index];
+            
+            // Update UI elements
+            questionNumber.textContent = index + 1;
+            currentQuestionEl.textContent = index + 1;
+            questionType.textContent = question.type === 'mcq' ? 'Multiple Choice' : 'True/False';
+            questionText.textContent = question.question;
+            topicIndicator.textContent = question.topic;
+            
+            // Show/hide appropriate answer containers
+            if (question.type === 'mcq') {
+                optionsContainer.style.display = 'grid';
+                tfContainer.style.display = 'none';
+                
+                // Clear and rebuild options
+                optionsContainer.innerHTML = '';
+                question.options.forEach((optionText, i) => {
+                    const option = document.createElement('div');
+                    option.className = 'option';
+                    option.textContent = optionText;
+                    option.dataset.value = String.fromCharCode(65 + i); // A, B, C, D
+                    
+                    // Restore previous answer if exists
+                    if (userAnswers[index] === option.dataset.value) {
+                        option.classList.add('selected');
+                    }
+                    
+                    option.addEventListener('click', () => handleOptionSelect(option, index));
+                    optionsContainer.appendChild(option);
+                });
+            } else {
+                optionsContainer.style.display = 'none';
+                tfContainer.style.display = 'flex';
+                
+                // Restore previous answer for TF
+                const tfOptions = tfContainer.querySelectorAll('.tf-option');
+                tfOptions.forEach(option => {
+                    option.classList.remove('selected', 'correct', 'incorrect');
+                    if (userAnswers[index] === option.dataset.value) {
+                        option.classList.add('selected');
+                    }
+                    option.onclick = () => handleTFSelect(option, index);
+                });
+            }
+            
+            // Show/hide feedback based on whether question was answered
+            if (userAnswers[index] !== null) {
+                showFeedback(index);
+            } else {
+                feedbackArea.style.display = 'none';
+                // Reset feedback container state
+                delete feedbackArea.dataset.answered;
+            }
+            
+            // Update navigation buttons
+            prevButton.disabled = index === 0;
+            nextButton.textContent = index === totalQuestions - 1 ? 'Finish Examination' : 'Next Question →';
+            nextButton.className = index === totalQuestions - 1 ? 'nav-button finish' : 'nav-button next';
+            
+            // Scroll to top of question
+            questionCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            
+            // Update progress bar
+            updateProgress();
+        }
+
+        // Handle MCQ option selection
+        function handleOptionSelect(option, questionIndex) {
+            const question = examData[questionIndex];
+            
+            // Remove selection states from all options
+            const allOptions = optionsContainer.querySelectorAll('.option');
+            allOptions.forEach(opt => {
+                opt.classList.remove('selected', 'correct', 'incorrect');
+            });
+            
+            // Add selected state to clicked option
+            option.classList.add('selected');
+            
+            // Store answer
+            userAnswers[questionIndex] = option.dataset.value;
+            
+            // Show feedback
+            showFeedback(questionIndex);
+        }
+
+        // Handle True/False selection
+        function handleTFSelect(option, questionIndex) {
+            const question = examData[questionIndex];
+            
+            // Remove selection states from all options
+            const allOptions = tfContainer.querySelectorAll('.tf-option');
+            allOptions.forEach(opt => {
+                opt.classList.remove('selected', 'correct', 'incorrect');
+            });
+            
+            // Add selected state to clicked option
+            option.classList.add('selected');
+            
+            // Store answer
+            userAnswers[questionIndex] = option.dataset.value;
+            
+            // Show feedback
+            showFeedback(questionIndex);
+        }
+
+        // Show feedback after answering
+        function showFeedback(questionIndex) {
+            const question = examData[questionIndex];
+            const userAnswer = userAnswers[questionIndex];
+            const isCorrect = userAnswer === question.correct;
+            
+            // Only update score once per question
+            if (!feedbackArea.dataset.answered && userAnswer !== null) {
+                if (isCorrect) {
+                    score++;
+                    currentScoreEl.textContent = score;
+                }
+                feedbackArea.dataset.answered = 'true';
+            }
+            
+            // Show feedback UI
+            feedbackArea.style.display = 'block';
+            feedbackText.textContent = isCorrect ? 
+                '✓ Absolutely Correct!' : 
+                `✗ Incorrect Answer • Correct answer: ${question.correct === 'true' ? 'TRUE' : question.correct === 'false' ? 'FALSE' : question.correct}`;
+            
+            feedbackText.className = isCorrect ? 
+                'feedback-text feedback-correct' : 
+                'feedback-text feedback-incorrect';
+            
+            // Highlight correct answer if user was wrong
+            if (!isCorrect) {
+                if (question.type === 'mcq') {
+                    const correctOption = Array.from(optionsContainer.children).find(
+                        opt => opt.dataset.value === question.correct
+                    );
+                    if (correctOption) correctOption.classList.add('correct');
+                } else {
+                    const correctOption = tfContainer.querySelector(`.tf-option[data-value="${question.correct}"]`);
+                    if (correctOption) correctOption.classList.add('correct');
+                }
+            }
+            
+            // Update progress immediately after answering
+            updateProgress();
+        }
+
+        // Update progress bar
+        function updateProgress() {
+            const answeredCount = userAnswers.filter(answer => answer !== null).length;
+            const progressPercent = Math.min(100, Math.round((answeredCount / totalQuestions) * 100));
+            progressBar.style.width = `${progressPercent}%`;
+        }
+
+        // Navigation handlers
+        prevButton.addEventListener('click', () => {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                loadQuestion(currentQuestionIndex);
+            }
+        });
+
+        nextButton.addEventListener('click', () => {
+            if (currentQuestionIndex < totalQuestions - 1) {
+                currentQuestionIndex++;
+                loadQuestion(currentQuestionIndex);
+            } else {
+                finishExam();
+            }
+        });
+
+        // Finish exam and show results
+        function finishExam() {
+            // Show results screen
+            questionCard.style.display = 'none';
+            feedbackArea.style.display = 'none';
+            document.querySelector('.progress-section').style.display = 'none';
+            document.querySelector('.navigation-area').style.display = 'none';
+            document.querySelector('.developer-credit').style.display = 'none';
+            document.querySelector('.copyright').style.display = 'none';
+            resultsScreen.style.display = 'block';
+            
+            // Calculate and display final score
+            const percentage = Math.round((score / totalQuestions) * 100);
+            finalScoreEl.textContent = `${percentage}%`;
+            correctCountEl.textContent = score;
+            
+            // Animate score circle
+            const angle = (score / totalQuestions) * 360;
+            scoreCircle.style.background = `conic-gradient(${angle}deg var(--accent-teal), var(--accent-purple) ${angle}deg)`;
+            
+            // Set performance message based on score
+            if (percentage >= 90) {
+                performanceMessage.textContent = 'EXCELLENT! Masterful understanding of digital logic concepts!';
+                performanceMessage.style.background = 'rgba(46, 204, 113, 0.32)';
+                performanceMessage.style.color = 'var(--correct-color)';
+                performanceMessage.style.borderColor = 'rgba(46, 204, 113, 0.65)';
+            } else if (percentage >= 75) {
+                performanceMessage.textContent = 'OUTSTANDING! Strong command of digital systems fundamentals.';
+                performanceMessage.style.background = 'rgba(52, 152, 219, 0.32)';
+                performanceMessage.style.color = '#2980b9';
+                performanceMessage.style.borderColor = 'rgba(52, 152, 219, 0.65)';
+            } else if (percentage >= 60) {
+                performanceMessage.textContent = 'GOOD! Solid grasp of core concepts. Review challenging areas.';
+                performanceMessage.style.background = 'rgba(155, 89, 182, 0.32)';
+                performanceMessage.style.color = '#9b59b6';
+                performanceMessage.style.borderColor = 'rgba(155, 89, 182, 0.65)';
+            } else if (percentage >= 50) {
+                performanceMessage.textContent = 'SATISFACTORY. Understanding of basics with room for improvement.';
+                performanceMessage.style.background = 'rgba(241, 196, 15, 0.32)';
+                performanceMessage.style.color = '#f39c12';
+                performanceMessage.style.borderColor = 'rgba(241, 196, 15, 0.65)';
+            } else {
+                performanceMessage.textContent = 'NEEDS IMPROVEMENT. Review all topics thoroughly and retake the exam.';
+                performanceMessage.style.background = 'rgba(231, 76, 60, 0.32)';
+                performanceMessage.style.color = 'var(--incorrect-color)';
+                performanceMessage.style.borderColor = 'rgba(231, 76, 60, 0.65)';
+            }
+        }
+
+        // Restart exam
+        restartButton.addEventListener('click', () => {
+            // Reset state
+            currentQuestionIndex = 0;
+            score = 0;
+            userAnswers = new Array(examData.length).fill(null);
+            currentScoreEl.textContent = '0';
+            delete feedbackArea.dataset.answered;
+            
+            // Reset UI
+            resultsScreen.style.display = 'none';
+            questionCard.style.display = 'block';
+            document.querySelector('.progress-section').style.display = 'block';
+            document.querySelector('.navigation-area').style.display = 'flex';
+            document.querySelector('.developer-credit').style.display = 'block';
+            document.querySelector('.copyright').style.display = 'block';
+            
+            // Load first question
+            loadQuestion(0);
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Add keyboard navigation support
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft' && !prevButton.disabled) {
+                prevButton.click();
+            } else if (e.key === 'ArrowRight' && !nextButton.disabled) {
+                nextButton.click();
+            }
+        });
+    </script>
+</body>
+</html>
